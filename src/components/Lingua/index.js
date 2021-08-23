@@ -1,10 +1,11 @@
-
+import { Header } from "../Layout/Header";
 
 
 
 export const Lingua = () => {
-  return(
+  return (
     <div>
+      <Header />
       Lingua
     </div>
   )

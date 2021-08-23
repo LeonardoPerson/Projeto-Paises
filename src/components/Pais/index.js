@@ -1,10 +1,11 @@
 
-
+import { Header } from "../Layout/Header";
 
 
 export const Pais = () => {
-  return(
+  return (
     <div>
+      <Header />
       Pais
     </div>
   )

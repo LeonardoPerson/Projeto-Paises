@@ -1,7 +1,9 @@
+import { Header } from "../Layout/Header";
 
 export const CodigoLigacao = () => {
-  return(
+  return (
     <div>
+      <Header />
       Código de Ligação
     </div>
   )

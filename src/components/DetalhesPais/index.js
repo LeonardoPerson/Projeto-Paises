@@ -1,7 +1,9 @@
+import { Header } from "../Layout/Header";
 
 export const DetalhesPais = () => {
-  return(
+  return (
     <div>
+      <Header />
       Detalhes do País
     </div>
   )

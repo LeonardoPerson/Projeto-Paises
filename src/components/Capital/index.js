@@ -1,8 +1,9 @@
-
+import { Header } from "../Layout/Header";
 
 export const Capital = () => {
-  return(
+  return (
     <div>
+      <Header />
       Capital
     </div>
   )

@@ -1,10 +1,11 @@
 
-
+import { Header } from "../Layout/Header";
 
 
 export const Regiao = () => {
-  return(
+  return (
     <div>
+      <Header />
       Regiao
     </div>
   )
