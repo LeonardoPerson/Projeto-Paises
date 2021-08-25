@@ -1,4 +1,4 @@
-import { Header } from "../Layout/Header";
+import { Header } from "../../Layout/Header";
 
 export const Capital = () => {
   return (
