@@ -136,6 +136,8 @@ export const DetalhesPais = (props) => {
           page={page}
           onChange={handleChange}
           defaultPage={1}
+          defaultPage={1}
+          siblingCount={0}
           shape="rounded"
           className="pagination"
         />

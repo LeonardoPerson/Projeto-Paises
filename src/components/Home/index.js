@@ -185,7 +185,7 @@ export const Home = (props) => {
       busca = escolhaFiltroFinal
     }
     axios.get(`https://restcountries.eu/rest/v2/${escolhaFiltroInicialEnglish}/${busca}`)
-      .then(res => {        
+      .then(res => {
         setResultadoPaises(res.data);
         setLoading(false);
       }).catch(res => {
@@ -205,7 +205,7 @@ export const Home = (props) => {
         setMenuSecundario(regiaoLista);
         setLoading(false)
       }
-    }else{
+    } else {
       setLoading(false)
     }
   }, [regiaoParam, regiaoLista]);
@@ -214,69 +214,80 @@ export const Home = (props) => {
     <div>
       <Header />
       {/*Primeiro filtro --------------------------------------------------------------------------------- */}
-      <div className="d-flex justify-content-around align-items-center flex-wrap col-md-12 p-5">
-        <div className="col-md-4 col-sm-12 col-xs-12 mb-5">
-          <div className="col-12 text-center">Filtrar por</div>
-          <Dropdown className="d-flex justify-content-center">
-            <Dropdown.Toggle className="dropdown col-md-8 col-sm-10 col-xs-12">{filtro || valorDefault}</Dropdown.Toggle>
-            <Dropdown.Menu className="col-md-8 col-sm-10 col-xs-12">
-              {menuInicial.map((item, index) => (
-                <Dropdown.Item className="dropdownItem" as="button" key={index} value={item} onClick={opcaoInicialSelecionada}>
-                  {item}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-        </div>
+      <div className="container p-5">
+        <div className="row">
+          <div className="col-sm p-3">
+            <div className="text-start">Filtrar por</div>
+            <Dropdown className="d-flex justify-content-start border-bottom">
+              <Dropdown.Toggle className="dropdown">{filtro || valorDefault}</Dropdown.Toggle>
+              <Dropdown.Menu>
+                {menuInicial.map((item, index) => (
+                  <Dropdown.Item className="dropdownItem" as="button" key={index} value={item} onClick={opcaoInicialSelecionada}>
+                    {item}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
 
-        {/*Segundo filtro com base no primeiro ---------------------------------------------------------- */}
-        <div className="col-md-4 col-sm-12 col-xs-12 mb-5">
+
+          {/*Segundo filtro com base no primeiro ---------------------------------------------------------- */}
+          <div className="col-sm p-3">
+            {
+              filtro &&
+              <div>
+                <div className="text-start">{filtro}</div>
+                <Dropdown className="d-flex justify-content-start border-bottom">
+                  <Dropdown.Toggle className="dropdown">{escolhaFiltroFinal ? escolhaFiltroFinal : escolhaFiltroInicial}</Dropdown.Toggle>
+                  <Dropdown.Menu className="">
+                    {menuSedundario && menuSedundario.map((item, index) => (
+                      <Dropdown.Item className="dropdownItem" as="button" key={index} value={item} onClick={opcaoFinalSelecionada}>
+                        {item}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            }
+          </div>
+
+          {/*Botao para pesquisa com base nos filtros anteriores ------------------------------------------- */}
+          <div className="col-sm d-flex justify-content-end justify-content-md-center p-4">
+            <button className="button-pesquisar px-5 py-2" onClick={pesquisaEscolha}>PESQUISAR</button>
+          </div>
+        </div>
+      </div>
+
+      {/*Exibição das bandeiras dos países------------------------------------------------------------- */}
+      <div className="container">
+        <div className="row">
           {
-            filtro &&
-            <div>
-              <div className="col-12 text-center">{filtro}</div>
-              <Dropdown className="d-flex justify-content-center">
-                <Dropdown.Toggle className="dropdown col-md-8 col-sm-10 col-xs-12">{escolhaFiltroFinal ? escolhaFiltroFinal : escolhaFiltroInicial}</Dropdown.Toggle>
-                <Dropdown.Menu className="col-md-8 col-sm-10 col-xs-12">
-                  {menuSedundario && menuSedundario.map((item, index) => (
-                    <Dropdown.Item className="dropdownItem" as="button" key={index} value={item} onClick={opcaoFinalSelecionada}>
-                      {item}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
+            loading ?
+              <CircularProgress />
+              :
+              resultadoPaises ? resultadoPaises.
+                slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                .map((item, index) => (
+                  <div key={index} className="col d-flex justify-content-around">
+                    <Link to={`/detalhes-pais/${item.name}`}>
+                      <img src={item.flag} alt={`Bandeira do país ${item.name}`} className="img-paises mb-5" />
+                    </Link>
+                  </div>
+                ))
+                :
+                (<div className="errorMessage">{errorMessage}</div>)
           }
         </div>
-
-        {/*Botao para pesquisa com base nos filtros anteriores ------------------------------------------- */}
-        <div className="col-md-4 col-sm-8 col-xs-10 d-flex justify-content-center mb-5">
-          <button className="button-pesquisar px-5 py-2" onClick={pesquisaEscolha}>PESQUISAR</button>
-        </div>
-
-        {/*Exibição das bandeiras dos países------------------------------------------------------------- */}
-        {
-          loading ?
-            <CircularProgress />
-            :
-            resultadoPaises ? resultadoPaises.
-              slice((page - 1) * itemsPerPage, page * itemsPerPage)
-              .map((item, index) => (
-                <div key={index}>
-                  <Link to={`/detalhes-pais/${item.name}`}><img src={item.flag} alt={`Bandeira do país ${item.name}`} className="img-paises col-md-4 col-sm-12 col-xs-12 mb-5" /></Link>
-                </div>
-              ))
-              :
-              (<div className="errorMessage">{errorMessage}</div>)
-        }
       </div>
+
       {/*Paginação ---------------------------------------------------------------------------------------------- */}
       <div className="d-flex justify-content-center p-5">
         <Pagination
           count={noOfPages}
           page={page}
-          onChange={handleChange}        
+          onChange={handleChange}
           defaultPage={1}
+          siblingCount={0}
           shape="rounded"
           className="pagination"
         />
