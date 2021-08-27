@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Header } from "../../Layout/Header";
+import { Header } from "../Layout/Header";
 import Dropdown from "react-bootstrap/Dropdown";
 import axios from "axios";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from "react-router-dom";
+import Pagination from '@material-ui/lab/Pagination';
 
 export const Home = (props) => {
   const regiao = props.match.params.region;
@@ -12,7 +13,7 @@ export const Home = (props) => {
   const masculino = "um";
   const feminino = "uma"
   const valorDefault = "Escolha uma opção";
-  const [regiaoParam, setRegiaoParam] = useState(regiao)
+  const regiaoParam = regiao;
   const [filtro, setFiltro] = useState("");
   const [menuSedundario, setMenuSecundario] = useState(null);
   const [paises, setPaises] = useState(null);
@@ -29,6 +30,21 @@ export const Home = (props) => {
   const [escolhaFiltroFinal, setEscolhaFiltroFinal] = useState("");
   const [loading, setLoading] = useState(true);
 
+  //Paginação ----------------------------------------------------------------------------------------------------
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(resultadoPaises.length / itemsPerPage);
+  const [page, setPage] = useState(1);
+  const [noOfPages, setNoOfPages] = useState(null);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  useEffect(() => {
+    if (totalPages) {
+      setNoOfPages(totalPages)
+    }
+  }, [totalPages])
 
   //verificando o gênero da escolha do primeiro filtro para a correta exibição no segundo filtro ----------------
   const verificaGenero = (valorDoFiltro) => {
@@ -67,7 +83,7 @@ export const Home = (props) => {
     }
   }
 
-  //Busca relacionada à cada item do primeiro filtro --------------------------------------------------------
+  //Buscas relacionadas à cada item do primeiro filtro --------------------------------------------------------
   const buscaRegioes = (regioes) => {
     const resultado = regioes.map(item => item.region);
     setRegiaoLista([...new Set(resultado)].sort());
@@ -127,7 +143,7 @@ export const Home = (props) => {
       })
   }, []);
 
-  //Identifica a escolha do primeiro filtro e abastece do menu secundário ----------------------------------------------------------------------------
+  //Identifica a escolha do primeiro filtro e abastece o menu secundário ----------------------------------------------------------------------------
   const criaMenuSecundario = (escolha) => {
     if (escolha === "Região") {
       setEscolhaFiltroInicialEnglish("region");
@@ -159,7 +175,7 @@ export const Home = (props) => {
     }
   }, [filtro]);
 
-
+  //Pesquisando pela escolha dos dois filtros ---------------------------------------------------------------------------------------
   const pesquisaEscolha = () => {
     setLoading(true);
     let busca = ""
@@ -178,6 +194,7 @@ export const Home = (props) => {
       })
   }
 
+  //Configurações do retorno da página de detalhes para a página inicial -------------------------------------------
   useEffect(() => {
     setLoading(true)
     if (regiaoParam) {
@@ -188,6 +205,8 @@ export const Home = (props) => {
         setMenuSecundario(regiaoLista);
         setLoading(false)
       }
+    }else{
+      setLoading(false)
     }
   }, [regiaoParam, regiaoLista]);
 
@@ -215,7 +234,7 @@ export const Home = (props) => {
         <div className="col-md-4 col-sm-12 col-xs-12 mb-5">
           {
             filtro &&
-            <>
+            <div>
               <div className="col-12 text-center">{filtro}</div>
               <Dropdown className="d-flex justify-content-center">
                 <Dropdown.Toggle className="dropdown col-md-8 col-sm-10 col-xs-12">{escolhaFiltroFinal ? escolhaFiltroFinal : escolhaFiltroInicial}</Dropdown.Toggle>
@@ -227,7 +246,7 @@ export const Home = (props) => {
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
-            </>
+            </div>
           }
         </div>
 
@@ -241,15 +260,27 @@ export const Home = (props) => {
           loading ?
             <CircularProgress />
             :
-            resultadoPaises ? resultadoPaises.map((item, index) => (
-              <div key={index}>
-                <Link to={`/detalhes-pais/${item.name}`}><img src={item.flag} alt={`Bandeira do país ${item.name}`} className="img-paises col-md-4 col-sm-12 col-xs-12 mb-5" /></Link>
-              </div>
-            ))
+            resultadoPaises ? resultadoPaises.
+              slice((page - 1) * itemsPerPage, page * itemsPerPage)
+              .map((item, index) => (
+                <div key={index}>
+                  <Link to={`/detalhes-pais/${item.name}`}><img src={item.flag} alt={`Bandeira do país ${item.name}`} className="img-paises col-md-4 col-sm-12 col-xs-12 mb-5" /></Link>
+                </div>
+              ))
               :
               (<div className="errorMessage">{errorMessage}</div>)
         }
-
+      </div>
+      {/*Paginação ---------------------------------------------------------------------------------------------- */}
+      <div className="d-flex justify-content-center p-5">
+        <Pagination
+          count={noOfPages}
+          page={page}
+          onChange={handleChange}        
+          defaultPage={1}
+          shape="rounded"
+          className="pagination"
+        />
       </div>
     </div>
   )

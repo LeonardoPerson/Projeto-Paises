@@ -1,4 +1,4 @@
-import movaLogo from "../assets/imagem/movaLogo.png";
+import movaLogo from "../../assets/imagem/movaLogo.png";
 import { Link } from "react-router-dom";
 import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 
@@ -11,6 +11,5 @@ export const Header = () => {
         <div className="texto-voltar">Voltar</div>
       </Link>
     </div>
-
   );
 }

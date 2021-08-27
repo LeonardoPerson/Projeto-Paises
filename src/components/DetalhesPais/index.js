@@ -1,8 +1,9 @@
-import { Header } from "../../Layout/Header";
+import { Header } from "../Layout/Header";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Pagination from '@material-ui/lab/Pagination';
 
 export const DetalhesPais = (props) => {
   const error = "Informações não encontradas..."
@@ -15,8 +16,23 @@ export const DetalhesPais = (props) => {
   const [vizinhosFinal, setVizinhosFinal] = useState([]);
   const arr = []
 
+  //Paginação ----------------------------------------------------------------------------------------------------
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(vizinhosFinal.length / itemsPerPage);
+  const [page, setPage] = useState(1);
+  const [noOfPages, setNoOfPages] = useState(null);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  useEffect(() => {
+    if (totalPages) {
+      setNoOfPages(totalPages)
+    }
+  }, [totalPages])
+
   const buscaVizinhos = (border) => {
-    console.log(border)
     setVizinhos(border.map(item => item.borders))
   }
 
@@ -36,7 +52,7 @@ export const DetalhesPais = (props) => {
 
     } else {
       setLoading(false)
-      setErrorMessage(error)
+      //setErrorMessage(error)
     }
 
   }, [atualizaNome])
@@ -45,13 +61,11 @@ export const DetalhesPais = (props) => {
   useEffect(() => {
     setLoading(true)
     console.log(vizinhos)
-    if (vizinhos && vizinhos[0].length !=0) {
-      vizinhos.map(item1 => item1.map(item2 => {
-        axios.get(`https://restcountries.eu/rest/v2/alpha/${item2}`)
+    if (vizinhos && vizinhos[0].length != 0) {
+      vizinhos.map(itemRaiz => itemRaiz.map(itemVizinho => {
+        axios.get(`https://restcountries.eu/rest/v2/alpha/${itemVizinho}`)
           .then(res => {
-
             setLoading(false)
-            console.log(res)
             const flag = res.data.flag
             const getNome = res.data.name
             arr.push({ flag, getNome })
@@ -65,18 +79,16 @@ export const DetalhesPais = (props) => {
       }
       ))
     } else {
-      setLoading(false)
       setErrorMessage(error)
+      setLoading(false)
     }
   }, [vizinhos])
 
   //Atualizando os detalhes do país escolhido ------------------------------------------------------------------------
   const mostraPais = (item) => {
-    console.log(item)
     setAtualizaNome(item)
   }
 
-  console.log(errorMessage)
   return (
     <div>
       <Header />
@@ -104,18 +116,31 @@ export const DetalhesPais = (props) => {
       <div className="d-flex flex-wrap justify-content-center">
         {loading ?
           <CircularProgress /> :
-          vizinhosFinal.length !=0 ? vizinhosFinal.map((item, index) => (
-            <div key={index}>
-              <button className="button-vizinhos" onClick={() => mostraPais(item.getNome)} alt={`imagem da bandeira do país ${item.getNome}`}>
-                <img src={item.flag} className="img-paises bg-light m-3" />
-              </button>
-            </div>
-          )
-          )
-          :
-          (<div className="errorMessage">{errorMessage}</div>)
+          vizinhosFinal.length != 0 ? vizinhosFinal
+            .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+            .map((item, index) => (
+              <div key={index}>
+                <button className="button-vizinhos" onClick={() => mostraPais(item.getNome)} alt={`imagem da bandeira do país ${item.getNome}`}>
+                  <img src={item.flag} className="img-paises bg-light m-3" />
+                </button>
+              </div>
+            )
+            )
+            :
+            <div className="errorMessage">{errorMessage}</div>
         }
 
+      </div>
+      {/*Paginação ---------------------------------------------------------------------------------------------- */}
+      <div className="d-flex justify-content-center p-5">
+        <Pagination
+          count={noOfPages}
+          page={page}
+          onChange={handleChange}
+          defaultPage={1}
+          shape="rounded"
+          className="pagination"
+        />
       </div>
     </div>
   )
