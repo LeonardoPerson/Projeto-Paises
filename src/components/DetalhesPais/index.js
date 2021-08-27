@@ -6,7 +6,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from '@material-ui/lab/Pagination';
 
 export const DetalhesPais = (props) => {
-  const error = "Informações não encontradas..."
   const nome = props.match.params.name;
   const [atualizaNome, setAtualizaNome] = useState(nome);
   const [paisesDetalhes, setPaisDetalhes] = useState("");
@@ -46,13 +45,12 @@ export const DetalhesPais = (props) => {
           buscaVizinhos(res.data)
           setLoading(false)
         }).catch(res => {
-          setErrorMessage(error);
+          setErrorMessage("Informações não encontradas...");
           setLoading(false)
         })
 
     } else {
       setLoading(false)
-      //setErrorMessage(error)
     }
 
   }, [atualizaNome])
@@ -74,12 +72,12 @@ export const DetalhesPais = (props) => {
             }
           }).catch(res => {
             setLoading(false)
-            setErrorMessage(error);
+            setErrorMessage("Informações não encontradas...");
           })
       }
       ))
     } else {
-      setErrorMessage(error)
+      setErrorMessage("Não existem vizinhos para este país...")
       setLoading(false)
     }
   }, [vizinhos])

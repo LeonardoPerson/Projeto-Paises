@@ -185,9 +185,9 @@ export const Home = (props) => {
       busca = escolhaFiltroFinal
     }
     axios.get(`https://restcountries.eu/rest/v2/${escolhaFiltroInicialEnglish}/${busca}`)
-      .then(res => {
-        setLoading(false);
+      .then(res => {        
         setResultadoPaises(res.data);
+        setLoading(false);
       }).catch(res => {
         setErrorMessage(error)
         setLoading(false);
@@ -209,7 +209,6 @@ export const Home = (props) => {
       setLoading(false)
     }
   }, [regiaoParam, regiaoLista]);
-
 
   return (
     <div>
