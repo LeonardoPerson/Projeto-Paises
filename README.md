@@ -4,4 +4,7 @@ Para a parte lógica, utilizei React com hooks e para estilização, CSS, Bootst
 O Bootstrap foi utilizado para espaçamentos e alinhamentos responsivos. <br />
 O CSS foi utilizado para detalhes mais específicos, como cores, estilos de bordas, tamanho de fontes, etc. <br />
 O Material-ui foi utilizado para paginação, ícone da seta para voltar e progresso circular durante as chamadas assíncronas. <br />
+O projeto pode ser acessado pelo link a seguir: https://projeto-paises.web.app/ <br />
+No modo de desenvolvimento, execute npm start no diretório raiz do projeto para rodar a aplicação.
+
 
