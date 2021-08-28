@@ -20,6 +20,8 @@ export const DetalhesPais = (props) => {
   const totalPages = Math.ceil(vizinhosFinal.length / itemsPerPage);
   const [page, setPage] = useState(1);
   const [noOfPages, setNoOfPages] = useState(null);
+  const posicaoInicialDaPagina = (page - 1) * itemsPerPage;
+  const posicaoFinalDaPagina = page * itemsPerPage;
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -116,7 +118,7 @@ export const DetalhesPais = (props) => {
         {loading ?
           <CircularProgress /> :
           vizinhosFinal.length !== 0 ? vizinhosFinal
-            .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+            .slice(posicaoInicialDaPagina, posicaoFinalDaPagina)
             .map((item, index) => (
               <div key={index}>
                 <button className="button-vizinhos" onClick={() => mostraPais(item.getNome)} alt={`imagem da bandeira do país ${item.getNome}`}>

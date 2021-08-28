@@ -35,6 +35,8 @@ export const Home = (props) => {
   const totalPages = Math.ceil(resultadoPaises.length / itemsPerPage);
   const [page, setPage] = useState(1);
   const [noOfPages, setNoOfPages] = useState(null);
+  const posicaoInicialDaPagina = (page - 1) * itemsPerPage;
+  const posicaoFinalDaPagina = page * itemsPerPage;
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -267,7 +269,7 @@ export const Home = (props) => {
               <CircularProgress />
               :
               resultadoPaises ? resultadoPaises
-                .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+                .slice(posicaoInicialDaPagina, posicaoFinalDaPagina)
                 .map((item, index) => (
                   <div key={index} className="col d-flex justify-content-around">
                     <Link to={`/detalhes-pais/${item.name}`}>
