@@ -59,23 +59,24 @@ export const DetalhesPais = (props) => {
   useEffect(() => {
     setLoading(true)
     console.log(vizinhos)
-    if (vizinhos && vizinhos[0].length != 0) {
-      vizinhos.map(itemRaiz => itemRaiz.map(itemVizinho => {
-        axios.get(`https://restcountries.eu/rest/v2/alpha/${itemVizinho}`)
-          .then(res => {
-            setLoading(false)
-            const flag = res.data.flag
-            const getNome = res.data.name
-            arr.push({ flag, getNome })
-            if (vizinhos[0].length === arr.length) {
-              setVizinhosFinal(arr)
-            }
-          }).catch(res => {
-            setLoading(false)
-            setErrorMessage("Informações não encontradas...");
-          })
+    if (vizinhos && vizinhos[0].length !== 0) {
+      vizinhos.map(itemRaiz => (itemRaiz.map(itemVizinho => {
+        return (
+          axios.get(`https://restcountries.eu/rest/v2/alpha/${itemVizinho}`)
+            .then(res => {
+              setLoading(false)
+              const flag = res.data.flag
+              const getNome = res.data.name
+              arr.push({ flag, getNome })
+              if (vizinhos[0].length === arr.length) {
+                setVizinhosFinal(arr)
+              }
+            }).catch(res => {
+              setLoading(false)
+              setErrorMessage("Informações não encontradas...");
+            }))
       }
-      ))
+      )))
     } else {
       setErrorMessage("Não existem vizinhos para este país...")
       setLoading(false)
@@ -97,7 +98,7 @@ export const DetalhesPais = (props) => {
         :
         paisesDetalhes && paisesDetalhes.map((item, index) =>
           <div key={index} className="d-flex flex-wrap p-5">
-            <img src={item.flag} className="img-paises" />
+            <img src={item.flag} className="img-paises" alt={`Bandeira do país ${item.name}`}/>
             <div className="d-flex flex-column p-4">
               <div className="p-1">Nome: {item.name}</div>
               <div className="p-1">Capital: {item.capital}</div>
@@ -114,12 +115,12 @@ export const DetalhesPais = (props) => {
       <div className="d-flex flex-wrap justify-content-center">
         {loading ?
           <CircularProgress /> :
-          vizinhosFinal.length != 0 ? vizinhosFinal
+          vizinhosFinal.length !== 0 ? vizinhosFinal
             .slice((page - 1) * itemsPerPage, page * itemsPerPage)
             .map((item, index) => (
               <div key={index}>
                 <button className="button-vizinhos" onClick={() => mostraPais(item.getNome)} alt={`imagem da bandeira do país ${item.getNome}`}>
-                  <img src={item.flag} className="img-paises bg-light m-3" />
+                  <img src={item.flag} className="img-paises bg-light m-3" alt={`Bandeira do país vizinho ${item.getNome}`}/>
                 </button>
               </div>
             )
@@ -135,7 +136,6 @@ export const DetalhesPais = (props) => {
           count={noOfPages}
           page={page}
           onChange={handleChange}
-          defaultPage={1}
           defaultPage={1}
           siblingCount={0}
           shape="rounded"

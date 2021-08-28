@@ -14,7 +14,6 @@ export const Header = () => {
             <KeyboardReturnIcon fontSize="large" className="nav-item" />
           </Link>
 
-
           <div className="d-flex justify-content-end p-5">
             <div className="collapse navbar-collapse">
               <ul className="navbar-nav mr-auto">

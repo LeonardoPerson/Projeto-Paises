@@ -74,7 +74,7 @@ export const Home = (props) => {
     if (filtro === "Língua") {
       let buscaLanguage = paises.map(item => item.languages)
       let comparaLanguage = buscaLanguage.map(item => item.find(item => item.name === evt.target.value && item.iso639_1))
-      let buscaCodigo = comparaLanguage.filter(item => item != undefined)
+      let buscaCodigo = comparaLanguage.filter(item => item !== undefined)
       setEscolhaFiltroFinal(evt.target.value);
 
       setLinguaCode(buscaCodigo[0].iso639_1);
@@ -265,8 +265,8 @@ export const Home = (props) => {
             loading ?
               <CircularProgress />
               :
-              resultadoPaises ? resultadoPaises.
-                slice((page - 1) * itemsPerPage, page * itemsPerPage)
+              resultadoPaises ? resultadoPaises
+                .slice((page - 1) * itemsPerPage, page * itemsPerPage)
                 .map((item, index) => (
                   <div key={index} className="col d-flex justify-content-around">
                     <Link to={`/detalhes-pais/${item.name}`}>
