@@ -203,6 +203,7 @@ export const Home = (props) => {
       setLoading(false)
       if (regiaoLista) {
         setMenuSecundario(regiaoLista);
+        pesquisaEscolha();
         setLoading(false)
       }
     } else {
