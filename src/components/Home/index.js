@@ -284,13 +284,14 @@ export const Home = (props) => {
       </div>
 
       {/*Paginação ---------------------------------------------------------------------------------------------- */}
-      <div className="d-flex justify-content-center p-5">
+      <div className="d-flex justify-content-center flex-nowrap p-5">
         <Pagination
           count={noOfPages}
           page={page}
           onChange={handleChange}
           defaultPage={1}
           siblingCount={0}
+          showLastButton={false}
           shape="rounded"
           className="pagination"
         />

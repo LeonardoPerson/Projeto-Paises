@@ -129,6 +129,12 @@ code {
 }
 
 /*Paginação -------------------------------------------------------------------------------*/
+.pagination ul{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
 .pagination button{
   box-shadow: 0 2px 2px 2px rgba(0, 0, 0, .2);
   padding: 10px;
